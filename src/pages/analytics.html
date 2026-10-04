@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics - Admin</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/analytics.css">
+</head>
+<body data-page="analytics">
+  <div id="sidebar-container"></div>
+  <div class="main-content">
+    <!-- Mobile top bar -->
+    <div class="mobile-top-bar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+      <h1>Analytics</h1>
+      <button id="theme-toggle" class="btn-secondary btn-sm">🌓</button>
+    </div>
+
+    <!-- Desktop header -->
+    <div class="page-header">
+      <h1>Business Analytics</h1>
+      <div class="header-actions">
+        <button id="theme-toggle-desktop" class="btn-secondary btn-sm">🌓 Theme</button>
+        <button id="logout-btn" class="btn-secondary btn-sm">Logout</button>
+      </div>
+    </div>
+
+    <!-- Period selector -->
+    <div class="card">
+      <label for="period-select">Revenue Period:</label>
+      <select id="period-select">
+        <option value="day">Today</option>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+        <option value="year">This Year</option>
+      </select>
+      <button id="refresh-analytics" class="btn-primary">Refresh</button>
+    </div>
+
+    <!-- 🔹 ADD THIS REVENUE STATS SECTION -->
+    <div class="stats-grid" style="margin-bottom: 1.5rem;">
+      <div class="card stat-card">
+        <h3>Revenue Total</h3>
+        <span id="revenue-total" class="stat-value">--</span>
+      </div>
+      <div class="card stat-card">
+        <h3>Transactions</h3>
+        <span id="revenue-count" class="stat-value">--</span>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-grid">
+      <div class="card chart-card">
+        <h3>Revenue</h3>
+        <canvas id="revenue-chart"></canvas>
+      </div>
+      <div class="card chart-card">
+        <h3>User Growth</h3>
+        <canvas id="user-growth-chart"></canvas>
+      </div>
+      <div class="card chart-card">
+        <h3>Retention</h3>
+        <canvas id="retention-chart"></canvas>
+      </div>
+      <div class="card chart-card">
+        <h3>Exam Performance</h3>
+        <canvas id="exam-performance-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Conversion metrics -->
+    <div class="card">
+      <h3>Conversion</h3>
+      <p>Total Users: <span id="total-users">--</span></p>
+      <p>Active Subscriptions: <span id="active-subscriptions">--</span></p>
+      <p>Conversion Rate: <span id="conversion-rate">--</span></p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initApp } from '../scripts/admin.js';
+    import {
+      loadRevenueChart,
+      loadUserGrowthChart,
+      loadConversionRate,
+      loadRetention,
+      loadExamPerformance
+    } from '../scripts/admin-analytics.js';
+
+    initApp();
+
+    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+      document.body.classList.toggle('sidebar-open');
+    });
+
+    document.getElementById('theme-toggle-desktop')?.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('adminTheme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    // Load all on start
+    loadRevenueChart();
+    loadUserGrowthChart();
+    loadConversionRate();
+    loadRetention();
+    loadExamPerformance();
+
+    document.getElementById('refresh-analytics').addEventListener('click', () => {
+      const period = document.getElementById('period-select').value;
+      loadRevenueChart(period);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+/* src/css/reversals.css */
+.filters-bar {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.filters-bar input {
+  flex: 1;
+  min-width: 200px;
+}
+.filters-bar select {
+  min-width: 150px;
+}
+#reversals-table-container {
+  overflow-x: auto;
+}

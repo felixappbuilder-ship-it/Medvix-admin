@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login -MedHub</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/login.css">
+</head>
+<body class="login-page" data-page="login">
+  <div class="login-container">
+    <div class="login-card card">
+      <img src="/assets/logo.png" alt="Logo" class="login-logo">
+      <h1>Admin Portal</h1>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn-primary w-full">Login</button>
+      </form>
+      <p class="forgot-link"><a href="#" id="forgot-password-link">Forgot password?</a></p>
+    </div>
+    <!-- Forgot password flow (hidden by default) -->
+    <div class="login-card card" id="forgot-password-card" style="display:none;">
+      <h2>Reset Password</h2>
+      <div id="step-email">
+        <div class="form-group">
+          <label for="reset-email">Enter your email</label>
+          <input type="email" id="reset-email">
+        </div>
+        <button id="get-questions-btn" class="btn-primary">Get Security Questions</button>
+      </div>
+      <div id="step-questions" style="display:none;">
+        <p>Answer your security questions:</p>
+        <div id="questions-container"></div>
+        <button id="verify-answers-btn" class="btn-primary">Verify Answers</button>
+      </div>
+      <div id="step-new-password" style="display:none;">
+        <div class="form-group">
+          <label for="new-password">New Password</label>
+          <input type="password" id="new-password">
+        </div>
+        <button id="reset-password-btn" class="btn-primary">Reset Password</button>
+      </div>
+      <p class="forgot-link"><a href="#" id="back-to-login">Back to login</a></p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { login, forgotPassword, verifyAnswers, resetPassword } from '../scripts/admin-auth.js';
+    import { showToast } from '../scripts/admin-utils.js';
+
+    const form = document.getElementById('login-form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      try {
+        const user = await login(email, password);
+        showToast('Welcome!', 'success');
+        window.location.href = '/pages/dashboard.html';
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    });
+
+    // Forgot password flow
+    const forgotLink = document.getElementById('forgot-password-link');
+    const backLink = document.getElementById('back-to-login');
+    const loginCard = document.querySelector('.login-card:first-of-type');
+    const forgotCard = document.getElementById('forgot-password-card');
+    let resetToken = null;
+
+    forgotLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      loginCard.style.display = 'none';
+      forgotCard.style.display = 'block';
+    });
+    backLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      forgotCard.style.display = 'none';
+      loginCard.style.display = 'block';
+      // Reset steps
+      document.getElementById('step-email').style.display = 'block';
+      document.getElementById('step-questions').style.display = 'none';
+      document.getElementById('step-new-password').style.display = 'none';
+    });
+
+    document.getElementById('get-questions-btn').addEventListener('click', async () => {
+      const email = document.getElementById('reset-email').value;
+      if (!email) return showToast('Email required', 'error');
+      try {
+        const questions = await forgotPassword(email);
+        const container = document.getElementById('questions-container');
+        container.innerHTML = '';
+        questions.forEach((q, idx) => {
+          container.innerHTML += `<div class="form-group"><label>${q}</label><input type="text" class="security-answer"></div>`;
+        });
+        document.getElementById('step-email').style.display = 'none';
+        document.getElementById('step-questions').style.display = 'block';
+      } catch (err) { showToast(err.message, 'error'); }
+    });
+
+    document.getElementById('verify-answers-btn').addEventListener('click', async () => {
+      const answers = Array.from(document.querySelectorAll('.security-answer')).map(input => input.value);
+      try {
+        const result = await verifyAnswers(answers);
+        resetToken = result.resetToken;
+        document.getElementById('step-questions').style.display = 'none';
+        document.getElementById('step-new-password').style.display = 'block';
+      } catch (err) { showToast(err.message, 'error'); }
+    });
+
+    document.getElementById('reset-password-btn').addEventListener('click', async () => {
+      const newPassword = document.getElementById('new-password').value;
+      if (!newPassword || newPassword.length < 6) return showToast('Minimum 6 characters', 'error');
+      try {
+        await resetPassword(newPassword, resetToken);
+        showToast('Password reset. Please login.', 'success');
+        // Go back to login
+        backLink.click();
+      } catch (err) { showToast(err.message, 'error'); }
+    });
+  </script>
+</body>
+</html>

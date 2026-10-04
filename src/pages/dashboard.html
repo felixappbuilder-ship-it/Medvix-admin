@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Admin</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body data-page="dashboard">
+  <div id="sidebar-container"></div>
+  <div class="main-content">
+    <div class="mobile-top-bar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+      <h1>Dashboard</h1>
+      <button id="theme-toggle" class="btn-secondary btn-sm">🌓</button>
+    </div>
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <div class="header-actions">
+        <button id="theme-toggle-desktop" class="btn-secondary btn-sm">🌓 Theme</button>
+        <button id="logout-btn" class="btn-secondary btn-sm">Logout</button>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="card stat-card">
+        <h3>Total Users</h3>
+        <span id="stat-total-users" class="stat-value">--</span>
+      </div>
+      <div class="card stat-card">
+        <h3>Active Subscriptions</h3>
+        <span id="stat-active-subs" class="stat-value">--</span>
+      </div>
+      <div class="card stat-card">
+        <h3>Revenue Today</h3>
+        <span id="stat-revenue-today" class="stat-value">--</span>
+      </div>
+      <div class="card stat-card">
+        <h3>Conversion Rate</h3>
+        <span id="stat-conversion" class="stat-value">--</span>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="card">
+      <h3>Recent Users</h3>
+      <div id="recent-users-table"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initApp } from '../scripts/admin.js';
+    import { query } from '../scripts/admin-api.js';
+    import { showToast, formatDate } from '../scripts/admin-utils.js';
+
+    initApp();
+
+    // Mobile sidebar toggle
+    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+      document.body.classList.toggle('sidebar-open');
+    });
+
+    // Theme toggle (desktop)
+    document.getElementById('theme-toggle-desktop')?.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('adminTheme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+    // Mobile theme toggle already handled by admin.js
+
+    async function loadDashboard() {
+      try {
+        // Conversion rates
+        const convData = await query('admin/queries:adminGetConversionRates');
+        document.getElementById('stat-total-users').textContent = convData.totalUsers;
+        document.getElementById('stat-active-subs').textContent = convData.activeSubscriptions;
+        document.getElementById('stat-conversion').textContent = convData.conversionRate;
+
+        // Revenue today
+        const revData = await query('admin/queries:adminGetRevenueReport', { period: 'day' });
+        document.getElementById('stat-revenue-today').textContent = `KES ${revData.total}`;
+
+        // Recent 5 users
+        const usersData = await query('admin/queries:adminGetAllUsers', { limit: 5 });
+        const tableDiv = document.getElementById('recent-users-table');
+        if (usersData.users.length > 0) {
+          let html = '<table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Joined</th></tr></thead><tbody>';
+          usersData.users.forEach(u => {
+            html += `<tr><td>${u.name}</td><td>${u.email}</td><td>${formatDate(u._creationTime)}</td></tr>`;
+          });
+          html += '</tbody></table>';
+          tableDiv.innerHTML = html;
+        } else {
+          tableDiv.innerHTML = '<p>No users yet.</p>';
+        }
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+    loadDashboard();
+  </script>
+</body>
+</html>

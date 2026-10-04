@@ -1,0 +1,9 @@
+/* src/css/security.css */
+#logs-table-container,
+#locked-users-container {
+  overflow-x: auto;
+}
+
+.card h3 {
+  margin-bottom: 1rem;
+}

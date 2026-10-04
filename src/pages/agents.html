@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Management - Admin</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/agents.css">
+</head>
+<body data-page="agents">
+  <div id="sidebar-container"></div>
+  <div class="main-content">
+    <!-- Mobile top bar -->
+    <div class="mobile-top-bar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+      <h1>Agents</h1>
+      <button id="theme-toggle" class="btn-secondary btn-sm">🌓</button>
+    </div>
+
+    <!-- Desktop header -->
+    <div class="page-header">
+      <h1>Agent Management</h1>
+      <div class="header-actions">
+        <button id="theme-toggle-desktop" class="btn-secondary btn-sm">🌓 Theme</button>
+        <button id="logout-btn" class="btn-secondary btn-sm">Logout</button>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card filters-bar">
+      <input type="text" id="agent-search" placeholder="Search by name, email or phone" autocomplete="off">
+      <select id="agent-filter">
+        <option value="">All Users</option>
+        <option value="agent">Agents (All)</option>
+        <option value="pending">Pending Verification</option>
+        <option value="verified">Verified Agents</option>
+        <option value="not-agent">Not Agents</option>
+      </select>
+    </div>
+
+    <!-- Bulk actions -->
+    <div class="card bulk-actions" id="bulk-actions" style="display: none;">
+      <span id="selected-count">0 selected</span>
+      <div>
+        <button id="bulk-upgrade-btn" class="btn-primary btn-sm">Upgrade to Agent</button>
+        <button id="bulk-verify-btn" class="btn-success btn-sm">Verify</button>
+        <button id="bulk-revoke-btn" class="btn-danger btn-sm">Revoke Agent</button>
+        <button id="bulk-clear-btn" class="btn-secondary btn-sm">Clear</button>
+      </div>
+    </div>
+
+    <!-- Agents table -->
+    <div class="card">
+      <div id="agents-table-container"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initApp } from '../scripts/admin.js';
+    import { initAgentsPage } from '../scripts/admin-agents.js';
+
+    initApp();
+    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+    document.getElementById('theme-toggle-desktop')?.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('adminTheme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+    initAgentsPage();
+  </script>
+</body>
+</html>

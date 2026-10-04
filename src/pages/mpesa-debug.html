@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M-Pesa Debug - Admin</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/mpesa-debug.css">
+</head>
+<body data-page="mpesa-debug">
+  <div id="sidebar-container"></div>
+  <div class="main-content">
+    <div class="mobile-top-bar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+      <h1>M-Pesa Debug</h1>
+      <button id="theme-toggle" class="btn-secondary btn-sm">🌓</button>
+    </div>
+
+    <div class="page-header">
+      <h1>M-Pesa Debug Tools</h1>
+      <div class="header-actions">
+        <button id="theme-toggle-desktop" class="btn-secondary btn-sm">🌓 Theme</button>
+        <button id="logout-btn" class="btn-secondary btn-sm">Logout</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Quick Actions</h2>
+      <div class="quick-actions">
+        <button id="verify-stk-btn" class="btn-primary">Verify Pending STK</button>
+        <button id="verify-b2c-btn" class="btn-primary">Verify Pending B2C</button>
+        <button id="verify-balance-btn" class="btn-primary">Verify Balance Queries</button>
+        <button id="verify-status-btn" class="btn-primary">Verify Status Queries</button>
+        <button id="check-balance-btn" class="btn-secondary">Check M-Pesa Balance</button>
+      </div>
+      <div id="balance-display" style="margin-top:1rem;font-weight:600;"></div>
+    </div>
+
+    <div class="card">
+      <h2>Recent Webhook Logs</h2>
+      <div id="webhook-logs-container"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initApp } from '../scripts/admin.js';
+    import { initMpesaDebugPage } from '../scripts/admin-mpesa-debug.js';
+
+    initApp();
+    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+    document.getElementById('theme-toggle-desktop')?.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('adminTheme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+    initMpesaDebugPage();
+  </script>
+</body>
+</html>

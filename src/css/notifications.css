@@ -1,0 +1,61 @@
+/* src/css/notifications.css */
+.card {
+  margin-bottom: 1.5rem;
+}
+.card h2 {
+  margin-bottom: 1rem;
+}
+.form-group textarea {
+  width: 100%;
+  resize: vertical;
+}
+#notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.notification-item {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.notification-item h4 {
+  margin-bottom: 0.25rem;
+}
+.notification-item p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Specific user search */
+.search-results {
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-top: 0.25rem;
+  background: var(--surface);
+}
+.search-result-item {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.search-result-item:hover {
+  background: var(--border);
+}
+.selected-users-list {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.user-chip {
+  background: var(--primary);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}

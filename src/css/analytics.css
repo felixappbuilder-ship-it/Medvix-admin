@@ -1,0 +1,40 @@
+/* src/css/analytics.css */
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.chart-card {
+  position: relative;
+  min-height: 300px;
+}
+
+.chart-card canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 300px;
+}
+
+/* Conversion info card */
+.card p {
+  margin: 0.5rem 0;
+}
+
+/* Period selector */
+.card select,
+.card button {
+  margin-right: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}

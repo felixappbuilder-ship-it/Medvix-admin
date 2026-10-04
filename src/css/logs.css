@@ -1,0 +1,4 @@
+/* src/css/logs.css */
+#audit-logs-table {
+  overflow-x: auto;
+}

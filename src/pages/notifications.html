@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications - Admin</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/notifications.css">
+  <style>
+    /* additional styles for template helpers */
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .template-btn {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: 0.2s;
+      text-align: left;
+    }
+    .template-btn:hover {
+      background: var(--bg-hover);
+      border-color: var(--primary);
+    }
+    .variable-help {
+      background: var(--bg-secondary);
+      padding: 0.5rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      margin: 0.5rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .variable-help code {
+      background: var(--bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .variable-help code:hover {
+      background: var(--primary);
+      color: white;
+    }
+    .preview-box {
+      background: var(--bg-secondary);
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      padding: 1rem;
+      margin-top: 0.5rem;
+      white-space: pre-wrap;
+      min-height: 60px;
+    }
+    .preview-box .notif-card {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body data-page="notifications">
+  <div id="sidebar-container"></div>
+  <div class="main-content">
+    <!-- Mobile top bar -->
+    <div class="mobile-top-bar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+      <h1>Notifications</h1>
+      <button id="theme-toggle" class="btn-secondary btn-sm">🌓</button>
+    </div>
+
+    <!-- Desktop header -->
+    <div class="page-header">
+      <h1>Notification Broadcasting</h1>
+      <div class="header-actions">
+        <button id="theme-toggle-desktop" class="btn-secondary btn-sm">🌓 Theme</button>
+        <button id="logout-btn" class="btn-secondary btn-sm">Logout</button>
+      </div>
+    </div>
+
+    <!-- Compose notification -->
+    <div class="card">
+      <h2>Compose Notification</h2>
+
+      <!-- Template helpers -->
+      <div class="form-group">
+        <label>📋 Quick Templates</label>
+        <div class="template-grid" id="template-grid">
+          <button class="template-btn" data-template="welcome">👋 Welcome New User</button>
+          <button class="template-btn" data-template="payment_success">✅ Payment Success</button>
+          <button class="template-btn" data-template="payment_failed">❌ Payment Failed</button>
+          <button class="template-btn" data-template="exam_result">📊 Exam Result</button>
+          <button class="template-btn" data-template="challenge_invite">🤝 Challenge Invite</button>
+          <button class="template-btn" data-template="subscription_expiry">⏳ Subscription Expiry</button>
+          <button class="template-btn" data-template="note_shared">📝 Note Shared</button>
+          <button class="template-btn" data-template="custom">✏️ Custom (blank)</button>
+        </div>
+      </div>
+
+      <!-- Variables helper -->
+      <div class="form-group">
+        <label>🔤 Available Variables (click to insert)</label>
+        <div class="variable-help" id="variable-help">
+          <code data-var="{{user.name}}">user.name</code>
+          <code data-var="{{user.email}}">user.email</code>
+          <code data-var="{{plan}}">plan</code>
+          <code data-var="{{amount}}">amount</code>
+          <code data-var="{{expiryDate}}">expiryDate</code>
+          <code data-var="{{examId}}">examId</code>
+          <code data-var="{{score}}">score</code>
+          <code data-var="{{subject}}">subject</code>
+          <code data-var="{{challengeCode}}">challengeCode</code>
+          <code data-var="{{shareToken}}">shareToken</code>
+          <code data-var="{{receipt}}">receipt</code>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="notification-title">Title</label>
+        <input type="text" id="notification-title" placeholder="Notification title">
+      </div>
+
+      <div class="form-group">
+        <label for="notification-message">Message (HTML allowed – use <code>{{variables}}</code>)</label>
+        <textarea id="notification-message" rows="6" placeholder="Enter message. Use {{variables}} for personalization."></textarea>
+      </div>
+
+      <!-- Live preview -->
+      <div class="form-group">
+        <label>👁️ Live Preview</label>
+        <div class="preview-box" id="preview-box">
+          <em>Message preview will appear here as you type.</em>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Target Audience</label>
+        <select id="notification-target">
+          <option value="all">All users</option>
+          <option value="subscribed">Subscribed users only</option>
+          <option value="trial">Trial users only</option>
+          <option value="specific">Specific users (pick below)</option>
+        </select>
+      </div>
+
+      <!-- Specific users area (hidden by default) -->
+      <div id="specific-users-area" style="display: none; margin-top: 1rem;">
+        <label>Search and add users:</label>
+        <input type="text" id="user-search-input" placeholder="Type name or email...">
+        <div id="user-search-results" class="search-results"></div>
+        <div id="selected-users-list" class="selected-users-list"></div>
+      </div>
+
+      <button id="send-notification-btn" class="btn-primary">Send Broadcast</button>
+    </div>
+
+    <!-- Recent notifications -->
+    <div class="card">
+      <h2>Recent Broadcasts</h2>
+      <div id="notifications-list"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initApp } from '../scripts/admin.js';
+    import { initNotificationsPage } from '../scripts/admin-notifications.js';
+
+    initApp();
+    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+    document.getElementById('theme-toggle-desktop')?.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('adminTheme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+    initNotificationsPage();
+  </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+/* src/css/backups.css */
+#backups-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+#backups-list li {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#backups-list li:last-child {
+  border-bottom: none;
+}
+
+#backups-list button {
+  margin-left: 1rem;
+}

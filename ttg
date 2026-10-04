@@ -1,0 +1,20 @@
+// In your notification handling logic
+function handleNotificationAction(element) {
+  const action = element.dataset.action;
+  switch (action) {
+    case 'optOutEncouragement':
+      // Call the toggle mutation
+      convexHttpClient.action("examResults/actions:toggleExamEncouragementOptOut", {
+        token: getToken(),
+        optOut: true
+      }).then(() => {
+        ui.showToast("You will no longer receive exam encouragement notifications.", "info");
+        // Optionally dismiss the notification
+      }).catch(err => {
+        console.error("Failed to toggle opt-out:", err);
+        ui.showToast("Failed to update preference.", "error");
+      });
+      break;
+    // ... other actions
+  }
+}

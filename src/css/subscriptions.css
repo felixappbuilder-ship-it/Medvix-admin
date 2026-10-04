@@ -1,0 +1,96 @@
+/* src/css/subscriptions.css */
+
+/* Actions bar */
+.actions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.search-filters {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-filters input[type="text"] {
+  min-width: 220px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Bulk actions bar */
+.bulk-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.bulk-actions span {
+  font-weight: 600;
+}
+
+.bulk-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Table container */
+#sub-table-container {
+  overflow-x: auto;
+}
+
+/* Subscription table checkbox column */
+.admin-table input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+/* Modal search results */
+.search-results {
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-top: 0.25rem;
+  background: var(--surface);
+}
+
+.search-result-item {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.search-result-item:hover {
+  background: var(--border);
+}
+
+#selected-user-display {
+  margin-top: 0.5rem;
+  font-weight: 500;
+  color: var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .actions-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-filters {
+    flex-direction: column;
+  }
+  .action-buttons {
+    justify-content: flex-end;
+  }
+}

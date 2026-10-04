@@ -1,0 +1,10 @@
+/* src/css/payments.css */
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+#payments-table-container {
+  overflow-x: auto;
+}

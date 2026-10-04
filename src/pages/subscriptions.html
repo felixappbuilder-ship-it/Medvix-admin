@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscriptions - Admin</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/subscriptions.css">
+</head>
+<body data-page="subscriptions">
+  <div id="sidebar-container"></div>
+  <div class="main-content">
+    <!-- Mobile top bar -->
+    <div class="mobile-top-bar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+      <h1>Subscriptions</h1>
+      <button id="theme-toggle" class="btn-secondary btn-sm">🌓</button>
+    </div>
+
+    <!-- Desktop header -->
+    <div class="page-header">
+      <h1>Subscription Management</h1>
+      <div class="header-actions">
+        <button id="theme-toggle-desktop" class="btn-secondary btn-sm">🌓 Theme</button>
+        <button id="logout-btn" class="btn-secondary btn-sm">Logout</button>
+      </div>
+    </div>
+
+    <!-- Top actions bar -->
+    <div class="card actions-bar">
+      <div class="search-filters">
+        <input type="text" id="search-input" placeholder="Search by user name or email..." autocomplete="off">
+        <select id="plan-filter">
+          <option value="">All Plans</option>
+          <option value="monthly">Monthly</option>
+          <option value="quarterly">Quarterly</option>
+          <option value="yearly">Yearly</option>
+          <option value="trial">Trial</option>
+        </select>
+        <select id="status-filter">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="expired">Expired</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      <div class="action-buttons">
+        <button id="grant-free-btn" class="btn-primary">Grant Free Subscription</button>
+      </div>
+    </div>
+
+    <!-- Bulk actions bar (hidden by default) -->
+    <div class="card bulk-actions" id="bulk-actions" style="display: none;">
+      <span id="selected-count">0 selected</span>
+      <div class="bulk-buttons">
+        <button id="bulk-extend-btn" class="btn-secondary btn-sm">Extend by days</button>
+        <button id="bulk-terminate-btn" class="btn-danger btn-sm">Terminate</button>
+        <button id="bulk-cancel-btn" class="btn-secondary btn-sm">Clear</button>
+      </div>
+    </div>
+
+    <!-- Subscriptions table -->
+    <div class="card">
+      <div id="sub-table-container"></div>
+    </div>
+  </div>
+
+  <!-- Grant Subscription Modal -->
+  <div class="modal-overlay" id="grant-modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Grant Free Subscription</h2>
+        <button class="modal-close" id="close-grant-modal">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Search User</label>
+          <input type="text" id="user-search-input" placeholder="Type name or email...">
+          <div id="user-search-results" class="search-results"></div>
+        </div>
+        <div id="selected-user-display"></div>
+        <div class="form-group">
+          <label>Plan</label>
+          <select id="grant-plan">
+            <option value="monthly">Monthly</option>
+            <option value="quarterly">Quarterly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Duration (days)</label>
+          <input type="number" id="grant-duration" min="1" value="30">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="submit-grant" class="btn-primary">Grant</button>
+        <button class="btn-secondary" id="cancel-grant">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initApp } from '../scripts/admin.js';
+    import {
+      loadSubscriptions,
+      initSubscriptionPage,
+      setupGrantModal,
+      setupBulkActions
+    } from '../scripts/admin-subs.js';
+
+    initApp();
+
+    // Mobile sidebar toggle
+    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+      document.body.classList.toggle('sidebar-open');
+    });
+
+    // Theme toggle (desktop)
+    document.getElementById('theme-toggle-desktop')?.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('adminTheme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    // Init the page
+    initSubscriptionPage();
+  </script>
+</body>
+</html>

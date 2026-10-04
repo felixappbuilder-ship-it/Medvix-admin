@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdrawals - Admin</title>
+  <link rel="stylesheet" href="../css/common.css">
+  <link rel="stylesheet" href="../css/withdrawals.css">
+</head>
+<body data-page="withdrawals">
+  <div id="sidebar-container"></div>
+  <div class="main-content">
+    <!-- Mobile top bar -->
+    <div class="mobile-top-bar">
+      <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+      <h1>Withdrawals</h1>
+      <button id="theme-toggle" class="btn-secondary btn-sm">🌓</button>
+    </div>
+
+    <!-- Desktop header -->
+    <div class="page-header">
+      <h1>Withdrawal Management</h1>
+      <div class="header-actions">
+        <button id="theme-toggle-desktop" class="btn-secondary btn-sm">🌓 Theme</button>
+        <button id="logout-btn" class="btn-secondary btn-sm">Logout</button>
+      </div>
+    </div>
+
+    <!-- Auto-approve setting -->
+    <div class="card auto-approve-card">
+      <div class="auto-approve-info">
+        <h3>Auto‑Approve Withdrawals</h3>
+        <p>Automatically process pending withdrawals via B2C when enabled.</p>
+      </div>
+      <div class="toggle-switch">
+        <input type="checkbox" id="auto-approve-toggle">
+        <label for="auto-approve-toggle" class="toggle-label"></label>
+        <span id="auto-approve-label" class="toggle-text">Disabled</span>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="card filters-bar">
+      <input type="text" id="search-input" placeholder="Search by user name, email or phone">
+      <select id="status-filter">
+        <option value="">All Status</option>
+        <option value="pending">Pending</option>
+        <option value="processed">Processed</option>
+        <option value="failed">Failed</option>
+      </select>
+    </div>
+
+    <!-- Bulk actions -->
+    <div class="card bulk-actions" id="bulk-actions" style="display: none;">
+      <span id="selected-count">0 selected</span>
+      <div class="bulk-buttons">
+        <button id="bulk-approve-btn" class="btn-success btn-sm">Approve</button>
+        <button id="bulk-b2c-btn" class="btn-primary btn-sm">B2C</button>
+        <button id="bulk-reject-btn" class="btn-danger btn-sm">Reject</button>
+        <button id="bulk-clear-btn" class="btn-secondary btn-sm">Clear</button>
+      </div>
+    </div>
+
+    <!-- Withdrawals table -->
+    <div class="card">
+      <div id="withdrawals-table-container"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initApp } from '../scripts/admin.js';
+    import { initWithdrawalsPage } from '../scripts/admin-withdrawals.js';
+
+    initApp();
+    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => document.body.classList.toggle('sidebar-open'));
+    document.getElementById('theme-toggle-desktop')?.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('adminTheme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+    initWithdrawalsPage();
+  </script>
+</body>
+</html>
