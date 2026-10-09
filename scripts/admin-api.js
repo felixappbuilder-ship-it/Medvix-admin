@@ -18,9 +18,33 @@ function injectToken(args = {}, requireToken = true) {
   return args;
 }
 
+/**
+ * Unwrap a Convex action response.
+ *
+ * On success, returns `result.data`.
+ *
+ * On failure, throws an Error. If the backend attached a structured
+ * `status` (e.g. DEVICE_LIMIT_REACHED, ACCOUNT_LOCKED), the error is
+ * tagged with:
+ *   err.code           = result.status
+ *   err.backendPayload = result.data || {}
+ * so callers can branch on the specific failure and read the payload.
+ *
+ * Plain failures with no `status` throw a bare Error(message), which
+ * preserves the previous behaviour for every existing caller.
+ */
 function unwrapResponse(result, operationName) {
   if (!result.success) {
-    throw new Error(result.message || `${operationName} failed`);
+    const message = result.message || `${operationName} failed`;
+
+    if (result.status) {
+      const err = new Error(message);
+      err.code = result.status;
+      err.backendPayload = result.data || {};
+      throw err;
+    }
+
+    throw new Error(message);
   }
   return result.data;
 }

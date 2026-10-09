@@ -67,3 +67,141 @@ body.login-page {
     padding: 1.5rem;
   }
 }
+
+/* ============================================================
+   DEVICE LIMIT MODAL
+   Shown when login() throws DEVICE_LIMIT_REACHED.
+   Uses only existing theme variables (--bg, --bg-card, --primary,
+   --border, --text-primary) so it inherits the site's light/dark
+   theme automatically.
+   ============================================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background: var(--bg-card, #fff);
+  color: var(--text-primary, #111);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border, #e5e7eb);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.modal-close {
+  background: transparent;
+  border: 0;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  color: inherit;
+  padding: 0 0.25rem;
+}
+
+.modal-body {
+  padding: 1rem 1.25rem;
+  overflow-y: auto;
+}
+
+.modal-body p {
+  margin: 0 0 0.75rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--border, #e5e7eb);
+}
+
+/* Device list inside the modal */
+.device-limit-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+}
+
+.device-limit-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--border, #e5e7eb);
+}
+
+.device-limit-item:first-child {
+  border-top: 0;
+}
+
+.device-limit-info {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.device-limit-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.device-limit-meta {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+.device-limit-actions {
+  flex: 0 0 auto;
+}
+
+/* "This device" pill next to the current device's name */
+.device-current {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: 999px;
+  background: var(--primary, #2563eb);
+  color: #fff;
+  vertical-align: middle;
+}
+
+/* Shown in place of the Remove button on the current device */
+.device-current-note {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.btn-remove-device {
+  cursor: pointer;
+}
